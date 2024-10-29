@@ -104,7 +104,7 @@ class MovieModel
 
   // -- ACCESO PÚBLICO -- 
   // obtener todas las películas
-  public function getMovies($orderBy, $filterBy, $filterValue)
+  public function getMovies($orderBy, $filterBy, $filterValue, $offset, $limit)
   {
     $sql = 'SELECT id_movie, title, poster_path, release_date, overview, company, main_genre FROM movie INNER JOIN genre ON movie.id_genre = genre.id_genre';
     if ($orderBy) {
@@ -113,6 +113,10 @@ class MovieModel
     if ($filterBy && $filterValue) {
       $sql .= " WHERE " . $filterBy . " = '" . $filterValue . "'";
     }
+    if ($offset && $limit){
+      $sql .= " LIMIT $offset, $limit";
+    }
+
     $query = $this->db->prepare($sql);
     $query->execute();
     $movies = $query->fetchAll(PDO::FETCH_OBJ);
