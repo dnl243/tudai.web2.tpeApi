@@ -33,7 +33,14 @@ class MovieApiController
       $orderBy = 'main_genre ' . $this->_verifyCondition(strtolower($req->query->orderByGenre));
     }
 
-    $movies = $this->model->getMovies($orderBy);
+    $filterBy = null;
+    $filterValue = null;
+    if (isset($req->query->filterByGenre)) {
+      $filterBy = 'main_genre';
+      $filterValue = $this->_verifyGenre(strtolower(urldecode($req->query->filterByGenre)));
+    }
+
+    $movies = $this->model->getMovies($orderBy, $filterBy, $filterValue);
 
     if (!$movies) {
       return $this->view->response("Movies Not Found", 404);
@@ -46,6 +53,17 @@ class MovieApiController
   {
     if ($condition == "asc" || $condition == "desc") {
       return $condition;
+    }
+  }
+
+  private function _verifyGenre($genreFilter)
+  {
+    $genres = $this->model->getGenres();
+
+    foreach ($genres as $genre) {
+      if ($genre->main_genre === $genreFilter) {
+        return $genre->main_genre;
+      }
     }
   }
 
