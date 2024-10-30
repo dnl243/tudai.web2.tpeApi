@@ -158,21 +158,21 @@ class MovieModel
   // insertar una película
   public function add($id_movie, $title, $imgToLoad, $release_date, $overview, $company, $id_genre)
   {
-    $poster_path = $this->uploadImage($imgToLoad);
+    // $poster_path = $this->uploadImage($imgToLoad);
 
     $query = $this->db->prepare('INSERT INTO movie (id_movie, title, poster_path, release_date, overview, company, id_genre) VALUES (?,?,?,?,?,?,?)');
-    $query->execute([$id_movie, $title, $poster_path, $release_date, $overview, $company, $id_genre]);
+    $query->execute([$id_movie, $title, $imgToLoad, $release_date, $overview, $company, $id_genre]);
 
     $id = $this->db->lastInsertId();
     return $id;
   }
 
-  public function uploadImage($imgToLoad)
-  {
-    $poster_path = 'images/movies/' . uniqid("", true) . '.' . strtolower(pathinfo($imgToLoad['full_path'], PATHINFO_EXTENSION));
-    move_uploaded_file($imgToLoad['tmp_name'], $poster_path);
-    return $poster_path;
-  }
+  // public function uploadImage($imgToLoad)
+  // {
+  //   $poster_path = 'images/movies/' . uniqid("", true) . '.' . strtolower(pathinfo($imgToLoad['full_path'], PATHINFO_EXTENSION));
+  //   move_uploaded_file($imgToLoad['tmp_name'], $poster_path);
+  //   return $poster_path;
+  // }
 
   // eliminar una película
   public function delete($title)

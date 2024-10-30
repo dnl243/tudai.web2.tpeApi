@@ -45,11 +45,13 @@ class MovieApiController
     // captura de parámetros GET para paginación
     $offset = null;
     $limit = null;
-    if (isset($req->query->page) && isset($req->query->limit)
-     && is_numeric($req->query->page) && is_numeric($req->query->limit)) {
+    if (
+      isset($req->query->page) && isset($req->query->limit)
+      && is_numeric($req->query->page) && is_numeric($req->query->limit)
+    ) {
       $page = $req->query->page;
       $limit = $req->query->limit;
-      $offset = ($page-1) * $limit;
+      $offset = ($page - 1) * $limit;
     }
 
     $movies = $this->model->getMovies($orderBy, $filterBy, $filterValue, $offset, $limit);
@@ -90,5 +92,56 @@ class MovieApiController
     }
 
     return $this->view->response($movie);
+  }
+
+  public function addMovie($req, $res)
+  {
+    if (!isset($req->body->id_movie) || empty($req->body->id_movie)) {
+      return $this->view->response("Faltan completar datos (id_movie)", 400);
+    }
+    if (!isset($req->body->title) || empty($req->body->title)) {
+      return $this->view->response("Faltan completar datos (title)", 400);
+    }
+    if (!isset($req->body->imgToLoad) || empty($req->body->imgToLoad)) {
+      return $this->view->response("Faltan completar datos (imgToLoad)", 400);
+    }
+    if (!isset($req->body->release_date) || empty($req->body->release_date)) {
+      return $this->view->response("Faltan completar datos (release_date)", 400);
+    }
+    if (!isset($req->body->overview) || empty($req->body->overview)) {
+      return $this->view->response("Faltan completar datos (overview)", 400);
+    }
+    if (!isset($req->body->company) || empty($req->body->company)) {
+      return $this->view->response("Faltan completar datos (company)", 400);
+    }
+    if (!isset($req->body->main_genre) || empty($req->body->main_genre)) {
+      return $this->view->response("Faltan completar datos (main_genre)", 400);
+    }
+
+    $id_movie = $req->body->id_movie;
+    $title = $req->body->title;
+    $imgToLoad = $req->body->imgToLoad;
+    $release_date = $req->body->release_date;
+    $overview = $req->body->overview;
+    $company = $req->body->company;
+    $main_genre = $req->body->main_genre;
+
+    $movie = $this->model->getMovie($id_movie, null);
+    if ($movie) {
+      return $this->view->response("El id = $movie->id_movie pertenece a la película = $movie->title.", 400);
+    }
+
+    $genre = $this->model->getGenre(null, $main_genre);
+    if (!$genre) {
+      return $this->view->response("Debe ingresar un género existente.", 400);
+    }
+
+    $this->model->add($id_movie, $title, $imgToLoad, $release_date, $overview, $company, $genre->id_genre);
+    $newMovie = $this->model->getMovie($id_movie, null);
+    if (!$newMovie) {
+      return $this->view->response("Error al insertar una película", 500);
+    }
+
+    return $this->view->response($newMovie, 201);
   }
 }

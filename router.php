@@ -7,6 +7,8 @@ $router = new Router();
 
 $router->addRoute('movies', 'GET', 'MovieApiController', 'getMovies');
 $router->addRoute('movies/:id', 'GET', 'MovieApiController', 'getMovieById');
+$router->addRoute('movies', 'POST', 'MovieApiController', 'addMovie');
+// $router->addRoute('movies', 'PUT', 'MovieApiController', 'updateMovie');
 
 $router->route($_GET['resource'], $_SERVER['REQUEST_METHOD']);
 
