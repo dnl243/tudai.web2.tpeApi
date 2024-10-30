@@ -102,7 +102,6 @@ class MovieModel
     }
   }
 
-  // -- ACCESO PÚBLICO -- 
   // obtener todas las películas
   public function getMovies($orderBy, $filterBy, $filterValue, $offset, $limit)
   {
@@ -113,7 +112,7 @@ class MovieModel
     if ($filterBy && $filterValue) {
       $sql .= " WHERE " . $filterBy . " = '" . $filterValue . "'";
     }
-    if ($offset && $limit){
+    if ($offset && $limit) {
       $sql .= " LIMIT $offset, $limit";
     }
 
@@ -154,14 +153,13 @@ class MovieModel
     return $movies;
   }
 
-  // -- ACCESO ADMINISTRADOR --
   // insertar una película
-  public function add($id_movie, $title, $imgToLoad, $release_date, $overview, $company, $id_genre)
+  public function add($id_movie, $title, $poster_path, $release_date, $overview, $company, $id_genre)
   {
     // $poster_path = $this->uploadImage($imgToLoad);
 
     $query = $this->db->prepare('INSERT INTO movie (id_movie, title, poster_path, release_date, overview, company, id_genre) VALUES (?,?,?,?,?,?,?)');
-    $query->execute([$id_movie, $title, $imgToLoad, $release_date, $overview, $company, $id_genre]);
+    $query->execute([$id_movie, $title, $poster_path, $release_date, $overview, $company, $id_genre]);
 
     $id = $this->db->lastInsertId();
     return $id;
@@ -182,15 +180,49 @@ class MovieModel
   }
 
   // editar una película
-  public function edit($id_movie, $title, $imgToLoad, $release_date, $overview, $company, $id_genre)
+  public function edit($id_movie, $title, $poster_path, $release_date, $overview, $company, $id_genre)
   {
-    $poster_path = $this->uploadImage($imgToLoad);
+    try {
+      // $poster_path = $this->uploadImage($imgToLoad);
+      $set = [];
+      $data = [];
 
-    $query = $this->db->prepare("UPDATE movie SET title = ?, poster_path = ?, release_date = ?, overview = ?, company = ?, id_genre = ? WHERE movie.id_movie = ?");
-    $query->execute([$title, $poster_path, $release_date, $overview, $company, $id_genre, $id_movie]);
+      if ($title) {
+        $set[] = "title = ?";
+        $data[] = $title;
+      }
+      if ($poster_path) {
+        $set[] = "poster_path = ?";
+        $data[] = $poster_path;
+      }
+      if ($release_date) {
+        $set[] = "release_date = ?";
+        $data[] = $release_date;
+      }
+      if ($overview) {
+        $set[] = "overview = ?";
+        $data[] = $overview;
+      }
+      if ($company) {
+        $set[] = "company = ?";
+        $data[] = $company;
+      }
+      if ($id_genre) {
+        $set[] = "id_genre = ?";
+        $data[] = $id_genre;
+      }
 
-    $id = $this->db->lastInsertId();
-    return $id;
+      $data[] = $id_movie;
+
+      $sql = "UPDATE movie SET " . implode(", ", $set) . "WHERE movie.id_movie = ?";
+
+      $query = $this->db->prepare($sql);
+      $query->execute($data);
+    } catch (PDOException $e) {
+      return ;
+    } catch (Exception $e) {
+      return ;
+    }
   }
 
   // buscar un género
