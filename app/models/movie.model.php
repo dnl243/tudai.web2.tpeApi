@@ -106,13 +106,13 @@ class MovieModel
   public function getMovies($orderBy, $filterBy, $filterValue, $offset, $limit)
   {
     $sql = 'SELECT id_movie, title, poster_path, release_date, overview, company, main_genre FROM movie INNER JOIN genre ON movie.id_genre = genre.id_genre';
-    if ($orderBy) {
-      $sql .= " ORDER by " . $orderBy;
-    }
     if ($filterBy && $filterValue) {
       $sql .= " WHERE " . $filterBy . " = '" . $filterValue . "'";
     }
-    if ($offset && $limit) {
+    if ($orderBy) {
+      $sql .= " ORDER by " . $orderBy;
+    }
+    if (isset($offset) && isset($limit)) {
       $sql .= " LIMIT $offset, $limit";
     }
 

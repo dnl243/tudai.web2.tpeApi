@@ -16,6 +16,14 @@ class MovieApiController
 
   public function getMovies($req, $res)
   {
+    // captura de parámetro GET para filtro
+    $filterBy = null;
+    $filterValue = null;
+    if (isset($req->query->filterByGenre)) {
+      $filterBy = 'main_genre';
+      $filterValue = $this->_verifyGenre(strtolower(urldecode($req->query->filterByGenre)));
+    }
+
     // captura de parámetro GET para orden
     $orderBy = null;
     if (isset($req->query->orderById)) {
@@ -34,14 +42,6 @@ class MovieApiController
       $orderBy = 'main_genre ' . $this->_verifyCondition(strtolower($req->query->orderByGenre));
     }
 
-    // captura de parámetro GET para filtro
-    $filterBy = null;
-    $filterValue = null;
-    if (isset($req->query->filterByGenre)) {
-      $filterBy = 'main_genre';
-      $filterValue = $this->_verifyGenre(strtolower(urldecode($req->query->filterByGenre)));
-    }
-
     // captura de parámetros GET para paginación
     $offset = null;
     $limit = null;
@@ -54,7 +54,7 @@ class MovieApiController
       $offset = ($page - 1) * $limit;
     }
 
-    $movies = $this->model->getMovies($orderBy, $filterBy, $filterValue, $offset, $limit);
+    $movies = $this->model->getMovies($filterBy, $filterValue, $orderBy, $offset, $limit);
 
     if (!$movies) {
       return $this->view->response("Movies Not Found", 404);

@@ -1,5 +1,5 @@
 ### Requerimientos Funcionales Mínimos
-1 - `La API Rest debe ser RESTful`   
+1 - `La API Rest debe ser RESTful.`   
 2 - `Debe tener al menos un servicio que liste (GET) una colección entera de entidades.`   
 3 - `El servicio que lista una colección entera debe poder ordenarse opcionalmente por al menos un campo de la tabla, de manera ascendente o descendente.`   
 4 - `Debe tener al menos un servicio que obtenga (GET) una entidad determinada por su ID.`   
@@ -14,16 +14,16 @@
 Se debe adjuntar documentación de los endpoints generados en el README.md del repositorio. Es decir, una descripción de cada endpoint, cómo se usan y ejemplos. Entender que esta documentación la va a leer otro desarrollador para entender cómo se consume la API.
 
 ### Notas
-=> parámetro GET = incorrecto => listará películas sin orden, sin filtro y sin paginar.   
-=> Por carecer de sentido, no se podrá ordenar por descripción ni poster_path.   
-=> En la inserción de un item, para la carga de imágenes, se debe guardar la imagen en la carpeta images/movies/nombre_del_archivo.jpg y luego cargar el path ("images/movies/nombre_del_archivo.jpg") en post como los demas datos.   
-En caso se no guardar la imagen, a modo de prueba, en post debe cargar un path ficticio, ya que tanto la db como el controller toman el dato como obligatorio.
+=> Parámetro GET = incorrecto => listará películas sin orden, sin filtro o sin paginar.   
+=> Podrán combinarse el orden, el filtrado y el paginado de busqueda ya que la consulta sql se genera de forma dinámica.
+=> Por carecer de sentido, no se podrá ordenar por overview ni poster_path.   
+=> En la inserción de un item, para la carga de imágenes, se debe cargar un path ficticio, ya que tanto la db como el controller toman el dato como obligatorio.
 
 ### Ejemplo de Item 
 - {
     "id_movie": 131,   
     "title": "Pelicula prueba 11",   
-    "poster_path": "images/movies/imagen.jpg",   
+    "poster_path": "images/movies/imagenPrueba11.jpg",   
     "release_date": "2025-10-29",   
     "overview": "Carga de datos de películas de prueba",   
     "company": "Unicen",   
@@ -72,8 +72,8 @@ En caso se no guardar la imagen, a modo de prueba, en post debe cargar un path f
 - localhost/tudai.web2.tpeApi/api/movies?page=2&limit=3 (ejemplo)
 
 ### 8.lista de películas según categoría (GET)
-=> parámetro GET = correcto => valor = incorrecto => listará películas sin filtro,
-=> parámetro GET = correcto => valor = correcto => filtro seleccionado.
+=> parámetro GET = correcto => valor = incorrecto => listará películas sin filtro,   
+=> parámetro GET = correcto => valor = correcto => filtro seleccionado. 
 - localhost/tudai.web2.tpeApi/api/movies?filterByGenre=aventura
 - localhost/tudai.web2.tpeApi/api/movies?filterByGenre=fantasia
 - localhost/tudai.web2.tpeApi/api/movies?filterByGenre=animación
