@@ -12,7 +12,7 @@ class MovieModel
     $this->deploy();
   }
 
-  // AUTODEPLOY
+  // AUTODEPLOY (TPE 2da entrega)
   private function deploy()
   {
     $query = $this->db->query('SHOW TABLES');
@@ -103,14 +103,16 @@ class MovieModel
   }
 
   // obtener todas las películas
-  public function getMovies($orderBy, $filterBy, $filterValue, $offset, $limit)
+  public function getMovies($filterBy, $filterValue, $orderBy, $orderValue, $offset, $limit)
   {
     $sql = 'SELECT id_movie, title, poster_path, release_date, overview, company, main_genre FROM movie INNER JOIN genre ON movie.id_genre = genre.id_genre';
+
     if ($filterBy && $filterValue) {
       $sql .= " WHERE " . $filterBy . " = '" . $filterValue . "'";
     }
-    if ($orderBy) {
-      $sql .= " ORDER by " . $orderBy;
+
+    if ($orderBy && $orderValue) {
+      $sql .= " ORDER by " . $orderBy . " " . $orderValue;
     }
     if (isset($offset) && isset($limit)) {
       $sql .= " LIMIT $offset, $limit";
@@ -123,16 +125,6 @@ class MovieModel
     return $movies;
   }
 
-  // buscar película según id o título
-  public function getMovie($id_movie, $title)
-  {
-    $query = $this->db->prepare('SELECT id_movie, title, poster_path, release_date, overview, company, main_genre FROM movie INNER JOIN genre ON movie.id_genre = genre.id_genre WHERE id_movie = ? || title = ?');
-    $query->execute([$id_movie, $title]);
-    $movie = $query->fetch(PDO::FETCH_OBJ);
-
-    return $movie;
-  }
-
   // obtener la lista de géneros
   public function getGenres()
   {
@@ -143,7 +135,17 @@ class MovieModel
     return $genres;
   }
 
-  // obtener la lista de películas según género
+  // buscar película según id o título
+  public function getMovie($id_movie, $title)
+  {
+    $query = $this->db->prepare('SELECT id_movie, title, poster_path, release_date, overview, company, main_genre FROM movie INNER JOIN genre ON movie.id_genre = genre.id_genre WHERE id_movie = ? || title = ?');
+    $query->execute([$id_movie, $title]);
+    $movie = $query->fetch(PDO::FETCH_OBJ);
+
+    return $movie;
+  }
+
+  // obtener la lista de películas según género (TPE 2da entrega)
   public function getMoviesByGenre($genre)
   {
     $query = $this->db->prepare('SELECT id_movie, title, poster_path, release_date, overview, company, main_genre FROM movie INNER JOIN genre ON movie.id_genre = genre.id_genre WHERE main_genre = ?');
@@ -154,12 +156,12 @@ class MovieModel
   }
 
   // insertar una película
-  public function add($id_movie, $title, $poster_path, $release_date, $overview, $company, $id_genre)
+  public function add($title, $poster_path, $release_date, $overview, $company, $id_genre)
   {
     // $poster_path = $this->uploadImage($imgToLoad);
 
-    $query = $this->db->prepare('INSERT INTO movie (id_movie, title, poster_path, release_date, overview, company, id_genre) VALUES (?,?,?,?,?,?,?)');
-    $query->execute([$id_movie, $title, $poster_path, $release_date, $overview, $company, $id_genre]);
+    $query = $this->db->prepare('INSERT INTO movie (title, poster_path, release_date, overview, company, id_genre) VALUES (?,?,?,?,?,?)');
+    $query->execute([$title, $poster_path, $release_date, $overview, $company, $id_genre]);
 
     $id = $this->db->lastInsertId();
     return $id;
@@ -173,56 +175,30 @@ class MovieModel
   // }
 
   // eliminar una película
-  public function delete($title)
+  public function delete($id_movie, $title)
   {
-    $query = $this->db->prepare('DELETE FROM movie WHERE title = ?');
-    $query->execute([$title]);
+    $query = $this->db->prepare('DELETE FROM movie WHERE id_movie = ? || title = ?');
+    $query->execute([$id_movie, $title]);
   }
 
   // editar una película
-  public function edit($id_movie, $title, $poster_path, $release_date, $overview, $company, $id_genre)
+  public function edit($id_movie, $movieData)
   {
-    try {
-      // $poster_path = $this->uploadImage($imgToLoad);
-      $set = [];
-      $data = [];
+    // $poster_path = $this->uploadImage($imgToLoad);
 
-      if ($title) {
-        $set[] = "title = ?";
-        $data[] = $title;
-      }
-      if ($poster_path) {
-        $set[] = "poster_path = ?";
-        $data[] = $poster_path;
-      }
-      if ($release_date) {
-        $set[] = "release_date = ?";
-        $data[] = $release_date;
-      }
-      if ($overview) {
-        $set[] = "overview = ?";
-        $data[] = $overview;
-      }
-      if ($company) {
-        $set[] = "company = ?";
-        $data[] = $company;
-      }
-      if ($id_genre) {
-        $set[] = "id_genre = ?";
-        $data[] = $id_genre;
-      }
+    $set = [];
+    $data = [];
 
-      $data[] = $id_movie;
-
-      $sql = "UPDATE movie SET " . implode(", ", $set) . "WHERE movie.id_movie = ?";
-
-      $query = $this->db->prepare($sql);
-      $query->execute($data);
-    } catch (PDOException $e) {
-      return ;
-    } catch (Exception $e) {
-      return ;
+    foreach ($movieData as $key => $value) {
+      $set[] = $key . " = ?";
+      $data[] = $value;
     }
+    $data[] = $id_movie;
+
+    $sql = "UPDATE movie SET " . implode(", ", $set) . " WHERE movie.id_movie = ?";
+
+    $query = $this->db->prepare($sql);
+    $query->execute($data);
   }
 
   // buscar un género
@@ -235,24 +211,24 @@ class MovieModel
     return $genre;
   }
 
-  // insertar un género
-  public function addGenre($id_genre, $main_genre)
+  // insertar un género (TPE 2da entrega)
+  public function addGenre($main_genre)
   {
-    $query = $this->db->prepare('INSERT INTO genre(id_genre, main_genre) VALUES (?, ?)');
-    $query->execute([$id_genre, $main_genre]);
+    $query = $this->db->prepare('INSERT INTO genre(main_genre) VALUES (?, ?)');
+    $query->execute([$main_genre]);
 
     $id = $this->db->lastInsertId();
     return $id;
   }
 
-  // eliminar género
+  // eliminar género (TPE 2da entrega)
   public function deleteGenre($main_genre)
   {
     $query = $this->db->prepare('DELETE FROM genre WHERE main_genre = ?');
     $query->execute([$main_genre]);
   }
 
-  // editar un género
+  // editar un género (TPE 2da entrega)
   public function editGenre($main_genre, $id_genre)
   {
     $query = $this->db->prepare("UPDATE genre SET main_genre = ? WHERE genre.id_genre = ?");
