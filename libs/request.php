@@ -2,9 +2,9 @@
 
 class Request
 {
-  public $body = null; // { nombre: 'Daniel', descripcion: 'Texto descriptivo'}
-  public $params = null; // /api/tareas/:id
-  public $query = null; // ?soloFinalizadas=true
+  public $body = null;
+  public $params = null;
+  public $query = null;
 
   public function __construct()
   {
@@ -17,10 +17,3 @@ class Request
     $this->query = (object) $_GET;
   }
 }
-
-# $_GET['resource'] = 'api/tareas';
-# $_GET['finalizadas'] = false;
-# $_GET['orderBy'] = 'prioridad';
-
-// $this->query->orderBy = 'prioridad';
-// $this->query->finalizadas = 'false';

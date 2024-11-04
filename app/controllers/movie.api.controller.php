@@ -66,7 +66,7 @@ class MovieApiController
     }
   }
 
-  public function getGenres()
+  private function getGenres()
   {
     $genreOptions = [];
     $genres = $this->model->getGenres();
@@ -95,6 +95,10 @@ class MovieApiController
 
   public function addMovie($req, $res)
   {
+    if (!$res->user) {
+      return $this->view->response("Authorization error: Invalid token.", 401);
+    }
+
     if (!isset($req->body->title) || empty($req->body->title)) {
       return $this->view->response("Data Is Missing (title)", 400);
     }
@@ -142,6 +146,10 @@ class MovieApiController
 
   public function updateMovie($req, $res)
   {
+    if (!$res->user) {
+      return $this->view->response("Authorization error: Invalid token.", 401);
+    }
+
     if (!isset($req->params->id) || empty($req->params->id) || !is_numeric($req->params->id)) {
       return $this->view->response("Invalid Id", 400);
     }
@@ -183,6 +191,10 @@ class MovieApiController
 
   public function deleteMovie($req, $res)
   {
+    if (!$res->user) {
+      return $this->view->response("Authorization error: Invalid token.", 401);
+    }
+
     $id_movie = $req->params->id;
 
     $movie = $this->model->getMovie($id_movie, null);
