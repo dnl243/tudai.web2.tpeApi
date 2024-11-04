@@ -137,8 +137,8 @@ Para filtrar la colección elegimos el campo "main_genre", de este modo permite 
 Los géneros pueden ser "aventura", "fantasia", "animación", "drama", "terror", "acción", "comedia", "suspenso", "crimen", "ciencia ficción", "romance", "familia".  
 Realizamos la petición mediante el verbo GET a travéz del siguiente endpoint:
 
-- localhost/tudai.web2.tpeApi/api/movies?filter=`campo a filtrar`&value=`género`
-- localhost/tudai.web2.tpeApi/api/movies?filter=main_genre&value=terror (ejemplo)
+- localhost/tudai.web2.tpeApi/api/movies?filter=`campo a filtrar`&filterValue=`género`
+- localhost/tudai.web2.tpeApi/api/movies?filter=main_genre&filterValue=terror (ejemplo)
 
 #### 9. El servicio que obtiene una colección entera debe poder ordenarse por cualquiera de los campos de la tabla de manera ascendente o descendente. (A diferencia del obligatorio que es solo por un campo a elección).
 
