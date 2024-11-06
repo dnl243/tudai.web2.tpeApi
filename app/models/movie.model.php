@@ -135,6 +135,14 @@ class MovieModel
     return $genres;
   }
 
+  public function getTableData($table){
+    $query = $this->db->prepare("DESCRIBE " . $table);
+    $query->execute();
+    $tableData = $query->fetchAll(PDO::FETCH_OBJ);
+
+    return $tableData;
+  }
+
   // buscar película según id o título
   public function getMovie($id_movie, $title)
   {

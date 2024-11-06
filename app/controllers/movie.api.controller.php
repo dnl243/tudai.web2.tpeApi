@@ -27,7 +27,8 @@ class MovieApiController
     }
 
     // captura de parámetro GET para orden
-    $orderFields = ['id_movie', 'title', 'release_date', 'company', 'main_genre'];
+    $orderFields = $this->getTableData('movie');
+    $orderFields[] = 'main_genre';
     $orderOptions = ["asc", "desc"];
     $orderBy = null;
     $orderValue = null;
@@ -64,6 +65,17 @@ class MovieApiController
         return $value;
       }
     }
+  }
+
+  private function getTableData($table)
+  {
+    $orderFields = [];
+    $tableData = $this->model->getTableData($table);
+    foreach ($tableData as $table) {
+      $orderFields[] = $table->Field;
+    }
+
+    return $orderFields;
   }
 
   private function getGenres()

@@ -58,8 +58,7 @@ Se recibirá un arreglo de objetos JSON como el siguiente ejemplo:
 #### 3. El servicio que lista una colección entera debe poder ordenarse opcionalmente por al menos un campo de la tabla, de manera ascendente o descendente.
 
 Para ordenar una busqueda debemos elegir un campo y un criterio de orden.  
-Los campos pueden ser "id_movie", "title", "release_date", "company", y "genre". El criterio será "asc" (ascendente) o "desc" (descendente).  
-Por carecer de sentido, no se podrá ordenar por "overview" ni "poster_path".  
+Los campos pueden ser "id_movie", "title", "poster_path", "release_date", "overview", "company", y "genre". El criterio será "asc" (ascendente) o "desc" (descendente).  
 Realizamos la petición mediante el verbo GET a travéz del siguiente endpoint:
 
 - localhost/tudai.web2.tpeApi/api/movies?order=`campo seleccionado`&orderValue=`criterio de orden`
