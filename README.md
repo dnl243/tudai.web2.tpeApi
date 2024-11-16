@@ -58,7 +58,7 @@ Se recibirá un arreglo de objetos JSON como el siguiente ejemplo:
 #### 3. El servicio que lista una colección entera debe poder ordenarse opcionalmente por al menos un campo de la tabla, de manera ascendente o descendente.
 
 Para ordenar una busqueda debemos elegir un campo y un criterio de orden.  
-Los campos pueden ser "id_movie", "title", "poster_path", "release_date", "overview", "company", y "genre". El criterio será "asc" (ascendente) o "desc" (descendente).  
+Los campos pueden ser "id_movie", "title", "poster_path", "release_date", "overview", "company", y "main_genre". El criterio será "asc" (ascendente) o "desc" (descendente).  
 Realizamos la petición mediante el verbo GET a travéz del siguiente endpoint:
 
 - localhost/tudai.web2.tpeApi/api/movies?order=`campo seleccionado`&orderValue=`criterio de orden`
@@ -74,17 +74,19 @@ Realizamos la petición mediante el verbo GET a travéz del siguiente endpoint:
 
 Se recibirá un objeto JSON como el siguiente:   
    
-- {  
-  "id_movie": 1012,  
-  "title": "Pelicula prueba 12",  
-  "poster_path": "images/movies/imagenPrueba12.jpg",  
-  "release_date": "2025-10-30",  
-  "overview": "Carga de datos de películas de prueba",  
-  "company": "Exactas",  
-  "main_genre": "fantasia"  
-  }
+- {    
+    "id_movie": 519182,    
+    "title": "Mi villano favorito 4",    
+    "poster_path": "images/movies/kqph8UWNOoYgTjYnkAx8dRlLLCq.jpg",    
+    "release_date": "2024-06-20",    
+    "overview": "Gru, Lucy y las niñas -Margo, Edith y Agnes- dan la bienvenida ...",    
+    "company": "Universal Pictures",    
+    "main_genre": "animación"    
+}    
 
 #### 5. Debe tener al menos un servicio para agregar y otro para modificar datos (POST y PUT).
+
+El servicio requiere un token para realizar modificaciones, es decir en las peticiones POST, PUT y DELETE.  
 
 ##### Inserción
 
