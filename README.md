@@ -154,7 +154,7 @@ El token generado tendrá una validez de 5min (300seg), luego de este tiempo, de
 
 1. Seleccionamos el verbo GET
 2. Cargamos el endpoint:  
-   localhost/tudai.web2.tpeApi/api/movies/usuarios/token
+   localhost/tudai.web2.tpeApi/api/usuarios/token
 3. En el apartado Authorization  
    seleccionamos Auth Type: "Basic Auth"  
    ingresamos username: "web@admin.com"  
